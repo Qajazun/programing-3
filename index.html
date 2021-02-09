@@ -1,0 +1,82 @@
+<html>
+   <head>
+         <style>
+               #legend {position: absolute;top: 0;right: 0;width: 800px;} .legend-color {width: 30px;height: 30px;} td {border: 1px solid black; font-size: 14px; padding-left: 5px;}
+           </style>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+       <script src="class.js"></script>
+	  <script src="script.js"></script>
+   </head>
+   <body>
+         <table id="legend">
+               <tr>
+                   <td class="legend-color">Գույն</td>
+                   <td>Անվանում</td>
+                   <td>Շարժվում է</td>
+                   <td>Ուտում է</td>
+                   <td>Բազմանում է</td>
+                   <td>Սատկում է</td>
+               </tr>
+       
+               <tr>
+                   <td class="legend-color" style="background-color:gray"></td>
+                   <td>Դատարկ վանդակներ</td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+                   <td></td>
+               </tr>
+               <tr>
+                   <td class="legend-color" style="background-color:green"></td>
+                   <td>Խոտ</td>
+                   <td></td>
+                   <td></td>
+                   <td>Մոտակա 8 վանդակներում, 4 տակտը մեկ</td>
+                   <td></td>
+               </tr>
+               <tr>
+                   <td class="legend-color" style="background-color:yellow"></td>
+                   <td>Խոտակեր</td>
+                   <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 1֊ով</td>
+                   <td>Խոտերին, մոտակա 8 վանդակներում, շարժվելիս էներգիան ավելանում է 1֊ով</td>
+                   <td>Բազմանում է մոտակա տարածքներում, երբ էներգիան 10֊ից ավել է</td>
+                   <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
+               </tr>
+               <tr>
+                   <td class="legend-color" style="background-color:red"></td>
+                   <td>Գիշատիչ</td>
+                   <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 2֊ով</td>
+                   <td>Խոտակերներին, մոտակա 8 վանդակներում, շարժվելիս էներգիան ավելանում է 2֊ով</td>
+                   <td>Բազմանում է մոտակա տարածքներում, երբ էներգիան 15֊ից ավել է</td>
+                   <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
+               </tr>
+               <tr>
+                     <td class="legend-color" style="background-color:orange"></td>
+                     <td>Բոմբ</td>
+                     <td></td>
+                     <td> ուտում է ամեն ինչ ինչ հայտնվում է նրա դիմաց </td>
+                     <td>4-10 տակտ գնում է պատահական ուղություններով մինջև վերջանա տակտը հետո էլի պատահական ուղություն կվերցնե եթե հասել է աշխարհի պատերին ու նա նույնպես ուզում է մեջը մտնի բայց չի մտնում այլ էլի պատահական ուղություն է վերցնում</td>
+                     <td>նա չի Սատկում</td>
+                 </tr>
+                 <tr>
+                     <td class="legend-color" style="background-color:pink "></td>
+                     <td>Լավա</td>
+                     <td></td>
+                     <td> պատում է ամբոխջ աշխարհը լավայով և ուտում է բոլորին բացի բոմբից </td>
+                     <td></td>
+
+                     <td></td>
+                 </tr>
+                 <tr>
+                    <td class="legend-color" style="background-color:brown "></td>
+                    <td>ստեղծում է լավա</td>
+                    <td></td>
+                    <td>  </td>
+                    <td></td>
+
+                    <td></td>
+                </tr>
+           </table>
+   </body>
+</html>
+
