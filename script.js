@@ -1,8 +1,101 @@
+var sideLength = 30;
+var numberOfSides = 20;
 
-function Random(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
+// Ընդգրկել socket.io գրադարանը
+var socket = io();
+
+// Լսել socket-ի matrixUpdate թարմացումներին և 
+// աշխատեցնել drawMatrix ֆունկցիան
+socket.on('matrixUpdate', drawMatrix);
+
+function setup() {
+    frameRate(5);
+	createCanvas(20* sideLength, 20 * sideLength);
+	background('#acacac');
 }
 
+function drawMatrix(data) {
+	// data օբյեկտից վերցնել matrix-ը
+	var matrix = data.matrix; 
+	
+	console.log(matrix);
+	
+	for (var y = 0; y < matrix.length; y++) {
+		for (var x = 0; x < matrix[y].length; x++) {
+
+			if (matrix[y][x] == 1) {
+				fill("green");
+			}
+			else if (matrix[y][x] == 2) {
+				fill("yellow");
+			}
+			else if (matrix[y][x] == 3) {
+				fill("red");
+			}
+			else if (matrix[y][x] == 4) {
+				fill("#ffa200");
+			} else if (matrix[y][x] == 'LavaSource') {
+				fill('#702727');
+
+			} else if (matrix[y][x] == 'Lava') {
+				fill('pink');
+			}
+
+			else if (matrix[y][x] == 0) {
+				fill("#acacac");
+			}
+			else { // 
+				fill("#ff0095");
+			}
+
+			rect(x * side, y * side, side, side);
+		}
+	}
+}
+
+
+
+
+socket.on("matrix",drawMatrix)
+function nkarel(matrix) {
+	for (var y = 0; y < matrix.length; y++) {
+	  for (var x = 0; x < matrix[0].length; x++) {
+		var obj = matrix[y][x];
+		if (obj == 1) {
+		  if (weath == "summer") {
+			fill("green");
+		  } else if (weath == "autumn") {
+			fill("#333300");
+		  } else if (weath == "winter") {
+			fill("white");
+		  } else if (weath == "spring") {
+			fill("#4dffa6");
+		  }
+		} else if (obj == 2) {
+		  fill("yellow");
+		} else if (obj == 0) {
+		  fill("grey")
+		}
+		rect(x * side, y * side, side, side);
+	  }
+	}
+  }
+
+  socket.on('send matrix', nkarel)
+
+	
+    // ... ավելացնել մատրիցան նկարելու լոգիկան
+
+
+// Ֆունկցիա օրը կանչվում է button-ի click իրադարձության ժամանակ
+function someEvent() {
+	// Ասել socket-ին որ տեղի ունեցավ someEvent իրադարձությունը
+    socket.emit('someEvent');
+}
+
+/*function Random(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 
 var matrix = [];
@@ -199,5 +292,5 @@ function draw() {
 }
 
 
-
+*/
 
