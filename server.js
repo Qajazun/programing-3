@@ -1,40 +1,8 @@
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
+io = require('socket.io')(server);
 var fs = require('fs');
-
-// ... ավելացնել կերպարների require-ները
-Grass = require("./class/Grass.js")
-GrassEater = require("./class/GrassEater.js")
-Preadtor = require("./class/Preadtor.js")
-Bomber = require("./class/Bomber.js")
-Lava = require("./class/Lava.js")
-Lava_source = require("./class/Lava_source.js")
-
-var weather = 'winter';
-var stats = [];
-
-
-
- var counter_grass = 5;
- var counter_grassEater = 5;
- var counter_wolf = 2;
- var counter_BomberMan = 1;
-
-
-
-
-grassArr = [];
-grassEaterArr = [];
-wolfArr = [];
-BomberManArr = [];
-Lava_sourceArr = [];
-LavaArr = [];
-
-
-
-// ... ավելացնել մնացած կերպարների զանգվածները
 
 app.use(express.static("."));
 
@@ -44,34 +12,42 @@ app.get('/', function (req, res) {
 
 server.listen(3000);
 
-// Աշխատում է, երբ նոր socket է միանում սերվերին
-io.on('connection', function (socket) {
-	console.log('a user connected');
-
-	// Լսել socket-ի someEvent թարմացումներին և 
-	// ներսում աշխատեղնել անհրաժեշտ կոդը
-	socket.on('someEvent', function () {
-		console.log('some event happened on server');
-		// ... ավելացնել լոգիկան թե մատրիցայում ինչ է տեղի ունենում ինչ որ իրադարձության ժամանակ	
-	});
-
-	// Աշխատում է, երբ միացված socket-ը անջատվում է սերվերից
-	socket.on('disconnect', function () {
-		console.log('user disconnected');
-	});
-});
-
-
-Random = function  (arr) {
+Random = function (arr) {
 	return arr[Math.floor(Math.random() * arr.length)];
 }
 
 
 // talis e patahakan tiv min-ic minchev max
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) ) + min;
+function rand(min, max) {
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// kanchum e modulnery
+weath = "winter";
+Grass = require("./class/Grass.js");
+GrassEater = require("./class/GrassEater");
+Predator = require("./class/Predator");
+Joker = require("./class/Joker");
+Wolf = require("./class/Wolf");
+
+
+
+
+// kerparneri qanaknery
+var count_grass = 1;
+var count_grassEater = 7;
+var count_predator = 4;
+var count_Joker = 10;
+var count_wolf = 10;
+
+// zangvacner classneri hamar
+grassArr = []
+grasseaterArr = []
+predatorArr = []
+JokerArr = []
+wolfArr = []
+
+// generacvum e matrix-y
 function genMatrix(w, h) {
 	var matrix = [];
 	for (var y = 0; y < h; y++) {
@@ -80,211 +56,223 @@ function genMatrix(w, h) {
 			matrix[y].push(0);
 		}
 	}
-	while (counter_grass > 0) {
-		var y = random(0,h-1);
-		var x = random(0,w-1);
+	while (count_grass > 0) {
+		var y = rand(0, h - 1);
+		var x = rand(0, w - 1);
 		if (matrix[y][x] == 0) {
 			matrix[y][x] = 1;
-			counter_grass--;
+			count_grass--;
 		}
-	
+
 	}
-	while (counter_grassEater > 0) {
-		var y = random(0,h-1);
-		var x = random(0,w-1);
+	while (count_grassEater > 0) {
+		var y = rand(0, h - 1);
+		var x = rand(0, w - 1);
 		if (matrix[y][x] == 0) {
 			matrix[y][x] = 2;
-			counter_grassEater--;
+			count_grassEater--;
 		}
-	
+
 	}
-	while (counter_wolf> 0) {
-		var y = random(0,h-1);
-		var x = random(0,w-1);
+	while (count_predator > 0) {
+		var y = rand(0, h - 1);
+		var x = rand(0, w - 1);
 		if (matrix[y][x] == 0) {
 			matrix[y][x] = 3;
-			counter_wolf--;
+			count_predator--;
 		}
 
-	
+
 	}
-	while (counter_BomberMan > 0) {
-		var y = random(0,h-1);
-		var x = random(0,w-1);
+	while (count_Joker > 0) {
+		var y = rand(0, h - 1);
+		var x = rand(0, w - 1);
 		if (matrix[y][x] == 0) {
 			matrix[y][x] = 4;
-			counter_BomberMan--;
+			count_Joker--;
 		}
 	}
-	while (counter_wolf > 0) {
-		var y = random(0,h-1);
-		var x = random(0,w-1);
+	while (count_wolf > 0) {
+		var y = rand(0, h - 1);
+		var x = rand(0, w - 1);
 		if (matrix[y][x] == 0) {
 			matrix[y][x] = 5;
-			counter_wolf--;
+			count_wolf--;
 		}
 	}
-	
+
 
 	return matrix;
-}   
+}
 
 // sarkum e generacvac matrix-y
-matrix = genMatrix(20,20); 
+matrix = genMatrix(20, 20);
 
-
-
-
-
-var rand_pos_LavaSource = Random(0, 3);
-
-
-
-if (rand_pos_LavaSource == 0) {
-	matrix[0][matrix.length - (1 + Random(0, matrix.length - 1))] = 'LavaSource';
-
-} else if (rand_pos_LavaSource == 1) {
-	matrix[matrix.length - 1][Random(0, matrix[0].length - 1)] = 'LavaSource';
-
-} else if (rand_pos_LavaSource == 2) {
-	matrix[Random(0, matrix.length - 1)][0] = 'LavaSource';
-
-} else if (rand_pos_LavaSource == 3) {
-	matrix[Random(0, matrix.length - 1)][matrix[0].length - 1] = 'LavaSource';
-}
-
-	// ... ավելացնել matrixGenerator ֆունկցիայի կոդը
-
-
-function start() {
-	
-
-
-
-
-
-	for (var y = 0; y < matrix.length; y++) {
-		for (var x = 0; x < matrix[y].length; x++) {
-
-			if (matrix[y][x] == 1) {
-				var _grass_ = new Grass(x, y, 1);
-				grassArr.push(_grass_);
+function createObject() {
+	// sarkum e skzbnakan classner-y
+	for (var y = 0; y < matrix.length; ++y) {
+		for (var x = 0; x < matrix[y].length; ++x) {
+			var obj = matrix[y][x]
+			if (obj == 1) {
+				var gr = new Grass(x, y, 1);
+				grassArr.push(gr);
 			}
+			else if (obj == 2) {
+				var ge = new GrassEater(x, y, 2)
+				grasseaterArr.push(ge);
 
-			else if (matrix[y][x] == 2) {
-				var _grassEater_ = new GrassEater(x, y, 2);
-				grassEaterArr.push(_grassEater_);
+			} else if (obj == 3) {
+				var pe = new Predator(x, y, 3)
+				predatorArr.push(pe);
+
 			}
-
-			else if (matrix[y][x] == 3) {
-				var _Preadtor_ = new Preadtor(x, y, 3);
-				wolfArr.push(_Preadtor_);
+			else if (obj == 4) {
+				var jok = new Joker(x, y, 4)
+				JokerArr.push(jok);
 			}
-
-			else if (matrix[y][x] == 4) {
-				var _Bomber_ = new Bomber(x, y, 4);
-				BomberManArr.push(_Bomber_);
+			else if (obj == 5) {
+				var wol = new Wolf(x, y, 5)
+				wolfArr.push(wol);
 			}
-
-			else if (matrix[y][x] == 'LavaSource') {
-				var _Lava_source_ = new Lava_source(x, y, 'LavaSource');
-				Lava_sourceArr.push(_Lava_source_);
-			}
-
-
 		}
 	}
-
-	// ... ավելացնել կերպարների օբյեկտները ստեղծելու լոգիկան 
-	// նախկինում setup ֆունկցիայում գրված
 }
 
-function game() {
-	// ... ավելացնել խաղի լոգիկան նախկինում draw ֆունկցիայում գրված
-for (var i = 0; i < grassArr.length; i++) {
+// misht krknvum e
+function interval() {
+	// amen ankam popoxum e classner-y
+	for (var i in grassArr) {
 		grassArr[i].mul();
 	}
-	for (var i = 0; i < grassEaterArr.length; i++) {
-		grassEaterArr[i].eat();
+	for (var i in grasseaterArr) {
+		grasseaterArr[i].move();
+		grasseaterArr[i].eat();
+		grasseaterArr[i].mul();
+		grasseaterArr[i].die();
 	}
-	for (var i = 0; i < wolfArr.length; i++) {
-		wolfArr[i].eat();
+	for (var i in predatorArr) {
+		predatorArr[i].move();
+		predatorArr[i].eat();
+		predatorArr[i].mul();
+		predatorArr[i].die();
 	}
 
-	for (var i = 0; i < Lava_sourceArr.length; i++) {
-		Lava_sourceArr[i].mul();
+	for (var i in JokerArr) {
+		JokerArr[i].move();
+		JokerArr[i].eat();
+		JokerArr[i].mul();
+		JokerArr[i].die();
 	}
-	for (var i = 0; i < LavaArr.length; i++) {
-		LavaArr[i].mul();
+	for (var i in wolfArr) {
+		wolfArr[i].move();
+		wolfArr[i].eat();
+		wolfArr[i].mul();
+		wolfArr[i].die();
 	}
-	for (var i = 0; i < BomberManArr.length; i++) {
-		BomberManArr[i].move();
-	}
+	io.sockets.emit("matrix", matrix);
+
+}
+
+// misht krknvum e 1 varkian-y mek
+setInterval(interval, 1000);
+
+
+
+
+function kill() {
+	grassArr = [];
+	grassEaterArr = [];
+
 
 	for (var y = 0; y < matrix.length; y++) {
 		for (var x = 0; x < matrix[y].length; x++) {
-
-			if (matrix[y][x] == 1) {
-				fill("green");
-			}
-			else if (matrix[y][x] == 2) {
-				fill("yellow");
-			}
-			else if (matrix[y][x] == 3) {
-				fill("red");
-			}
-			else if (matrix[y][x] == 4) {
-				fill("#ffa200");
-			} else if (matrix[y][x] == 'LavaSource') {
-				fill('#702727');
-
-			} else if (matrix[y][x] == 'Lava') {
-				fill('pink');
-			}
-
-			else if (matrix[y][x] == 0) {
-				fill("#acacac");
-			}
-			else { // 
-				fill("#ff0095");
-			}
-
-			rect(x * side, y * side, side, side);
+			matrix[y][x] = 0;
 		}
 	}
-}
-	// Ստեղծել data օբյեկտը և նրա մեջ պահել այն տվյալները,
-	// որոնք պետք է ուղարկել socket-ով
-	var data = {
-		'matrix': matrix,
-		'weater': weather
-	};
-
-	// Ասել socket-ին որ տեղի ունեցավ matrixUpdate իրադարձությունը և
-	// ուղարկում է data օբյեկտը
-	io.sockets.emit('matrixUpdate', data);
-
-	saveStats();
-
-
-// Կերպարների զանգվածներում առկա օբյեկտների քանակի հիման վրա ստեղծում է
-// նոր ստատիստիկա և այն ավելացնում ստատիստիկայի գլոբալ փոփոխականի մեջ և
-// այն ամբողջական տվյալները պահպանում է ֆայլում
-function saveStats() {
-    var fileName = 'stats.json';
-	var statsObject = {
-		'grassCount': grassArr.length,
-		'grassEaterCount': grassEaterArr.length,
-		'predatorCount': wolfArr.length
-		// ... ավելացնել մնացած կերպարների տվյալները
-	};
-
-    stats.push(statsObject);
-    fs.writeFileSync(fileName, JSON.stringify(stats, null, 4));
+	io.sockets.emit("send matrix", matrix);
 }
 
-// Կանչել start ֆունկցիան ծրագրի աշխատանքի սկզբում 1 անգամ
-start();
 
-// Ստեղծել ինտերվալ, որ game ֆունկցիան կանչվի պարբերաբար
-setInterval(game, 1000);
+function addGrass() {
+	for (var i = 0; i < 7; i++) {
+		var x = Math.floor(Math.random() * matrix[0].length)
+		var y = Math.floor(Math.random() * matrix.length)
+		if (matrix[y][x] == 0) {
+			matrix[y][x] = 1
+			var gr = new Grass(x, y, 1)
+			grassArr.push(gr)
+		}
+	}
+	io.sockets.emit("send matrix", matrix);
+}
+function addGrassEater() {
+	for (var i = 0; i < 7; i++) {
+		var x = Math.floor(Math.random() * matrix[0].length)
+		var y = Math.floor(Math.random() * matrix.length)
+		if (matrix[y][x] == 0) {
+			matrix[y][x] = 2
+			grasseaterArr.push(new GrassEater(x, y, 2))
+		}
+
+	}
+	io.sockets.emit("send matrix", matrix);
+
+}
+function addPredator() {
+	for (var i = 0; i < 7; i++) {
+		var x = Math.floor(Math.random() * matrix[0].length)
+		var y = Math.floor(Math.random() * matrix.length)
+		if (matrix[y][x] == 0) {
+			matrix[y][x] = 3
+			predatorArr.push(new Predator(x, y, 3))
+		}
+
+	}
+	io.sockets.emit("send matrix", matrix);
+
+}
+
+function weather() {
+	if (weath == "winter") {
+		weath = "spring"
+	}
+	else if (weath == "spring") {
+		weath = "summer"
+	}
+	else if (weath == "summer") {
+		weath = "autumn"
+	}
+	else if (weath == "autumn") {
+		weath = "winter"
+	}
+	io.sockets.emit('weather', weath)
+}
+setInterval(weather, 5000);
+
+
+
+
+
+
+
+
+io.on('connection', function (socket) {
+	createObject();
+	socket.on("kill", kill);
+	socket.on("add grass", addGrass);
+	socket.on("add grassEater", addGrassEater);
+	socket.on("add predator", addPredator);
+
+});
+
+
+var statistics = {};
+
+setInterval(function () {
+	statistics.grass = grassArr.length;
+	statistics.grassEater = grasseaterArr.length;
+
+	fs.writeFile("statistics.json", JSON.stringify(statistics), function () {
+		console.log("send")
+	})
+}, 1000)

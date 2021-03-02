@@ -1,88 +1,62 @@
 <html>
-   <head>
-         <style>
-               #legend {position: absolute;top: 0;right: 0;width: 800px;} .legend-color {width: 30px;height: 30px;} td {border: 1px solid black; font-size: 14px; padding-left: 5px;}
-           </style>
-       <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
-       
-	   <script src="script.js"></script>
-      
-       
-       <button onclick="someEvent()">Ինչ որ իրադարձություն</button>
 
-     
-   </head>
-   <body>
-         <table id="legend">
-               <tr>
-                   <td class="legend-color">Գույն</td>
-                   <td>Անվանում</td>
-                   <td>Շարժվում է</td>
-                   <td>Ուտում է</td>
-                   <td>Բազմանում է</td>
-                   <td>Սատկում է</td>
-               </tr>
-       
-               <tr>
-                   <td class="legend-color" style="background-color:gray"></td>
-                   <td>Դատարկ վանդակներ</td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-                   <td></td>
-               </tr>
-               <tr>
-                   <td class="legend-color" style="background-color:green"></td>
-                   <td>Խոտ</td>
-                   <td></td>
-                   <td></td>
-                   <td>Մոտակա 8 վանդակներում, 4 տակտը մեկ</td>
-                   <td></td>
-               </tr>
-               <tr>
-                   <td class="legend-color" style="background-color:yellow"></td>
-                   <td>Խոտակեր</td>
-                   <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 1֊ով</td>
-                   <td>Խոտերին, մոտակա 8 վանդակներում, շարժվելիս էներգիան ավելանում է 1֊ով</td>
-                   <td>Բազմանում է մոտակա տարածքներում, երբ էներգիան 10֊ից ավել է</td>
-                   <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-               </tr>
-               <tr>
-                   <td class="legend-color" style="background-color:red"></td>
-                   <td>Գիշատիչ</td>
-                   <td>Մոտակա 8 վանդակներում, էներգիան քչանում է 2֊ով</td>
-                   <td>Խոտակերներին, մոտակա 8 վանդակներում, շարժվելիս էներգիան ավելանում է 2֊ով</td>
-                   <td>Բազմանում է մոտակա տարածքներում, երբ էներգիան 15֊ից ավել է</td>
-                   <td>Սատկում է, երբ էներգիան փոքր է 0֊ից</td>
-               </tr>
-               <tr>
-                     <td class="legend-color" style="background-color:orange"></td>
-                     <td>Բոմբ</td>
-                     <td></td>
-                     <td> ուտում է ամեն ինչ ինչ հայտնվում է նրա դիմաց </td>
-                     <td>4-10 տակտ գնում է պատահական ուղություններով մինջև վերջանա տակտը հետո էլի պատահական ուղություն կվերցնե եթե հասել է աշխարհի պատերին ու նա նույնպես ուզում է մեջը մտնի բայց չի մտնում այլ էլի պատահական ուղություն է վերցնում</td>
-                     <td>նա չի Սատկում</td>
-                 </tr>
-                 <tr>
-                     <td class="legend-color" style="background-color:pink "></td>
-                     <td>Լավա</td>
-                     <td></td>
-                     <td> պատում է ամբոխջ աշխարհը լավայով և ուտում է բոլորին բացի բոմբից </td>
-                     <td></td>
+<head>
+  <style>
+    #legend {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 800px;
+    }
 
-                     <td></td>
-                 </tr>
-                 <tr>
-                    <td class="legend-color" style="background-color:brown "></td>
-                    <td>ստեղծում է լավա</td>
-                    <td></td>
-                    <td>  </td>
-                    <td></td>
+    .legend-color {
+      width: 30px;
+      height: 30px;
+    }
 
-                    <td></td>
-                </tr>
-           </table>
-   </body>
+    td {
+      border: 1px solid black;
+      font-size: 14px;
+      padding-left: 5px;
+    }
+  </style>
+  <script src="/node_modules/socket.io/client-dist/socket.io.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.14/p5.js"></script>
+
+  <script src="script.js"></script>
+  <style>
+.button1 {background-color: #4CAF50;} /* Green */
+.button2 {background-color:darkkhaki  #4CAF50;} /* Yellow */
+.button3 {background-color: #f44336;} /* Red */
+.button4 {background-color: #e7e7e7; color: black;} /* Gray */
+
+  
+</style>
+
+
+</head>
+
+<body>
+  <div class="tools">
+    <h1 style="color:red">Events</h1>
+    <ul>
+      <li>
+        <button class="button" onclick="kill()"> Kill them all</button>
+      </li>
+      <li>
+        <button class="button1" onclick="addGrass()">Add grass</button>
+      </li>
+      <li>
+        <button class="button2" onclick="addGrassEater()">Add grass eater</button>
+      </li>
+      <li>
+        <button class="button3" onclick="addPredator()">Add predator</button>
+      </li>
+      <li>
+
+
+    </ul>
+
+</body>
+
 </html>
-
