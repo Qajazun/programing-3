@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-io = require('socket.io')(server);
+var io = require('socket.io')(server);
 var fs = require('fs');
 
 app.use(express.static("."));
@@ -23,16 +23,16 @@ function rand(min, max) {
 }
 
 // kanchum e modulnery
-weath = "winter";
-Grass = require("./class/Grass.js");
-GrassEater = require("./class/GrassEater");
-Predator = require("./class/Predator");
-Joker = require("./class/Joker");
-Wolf = require("./class/Wolf");
+
+var Grass = require("./class/Grass.js");
+var GrassEater = require("./class/GrassEater");
+var Predator = require("./class/Predator");
+var Joker = require("./class/Joker");
+var Wolf = require("./class/Wolf");
 
 
 
-
+var weath = "winter";
 // kerparneri qanaknery
 var count_grass = 1;
 var count_grassEater = 7;
@@ -41,11 +41,11 @@ var count_Joker = 10;
 var count_wolf = 10;
 
 // zangvacner classneri hamar
-grassArr = []
-grasseaterArr = []
-predatorArr = []
-JokerArr = []
-wolfArr = []
+grassArr = [];
+grasseaterArr = [];
+predatorArr = [];
+JokerArr = [];
+wolfArr = [];
 
 // generacvum e matrix-y
 function genMatrix(w, h) {
@@ -100,13 +100,13 @@ function genMatrix(w, h) {
 			count_wolf--;
 		}
 	}
-
-
 	return matrix;
 }
 
 // sarkum e generacvac matrix-y
 matrix = genMatrix(20, 20);
+
+createObject();
 
 function createObject() {
 	// sarkum e skzbnakan classner-y
@@ -150,6 +150,7 @@ function interval() {
 		grasseaterArr[i].mul();
 		grasseaterArr[i].die();
 	}
+
 	for (var i in predatorArr) {
 		predatorArr[i].move();
 		predatorArr[i].eat();
@@ -170,18 +171,17 @@ function interval() {
 		wolfArr[i].die();
 	}
 	io.sockets.emit("matrix", matrix);
-
 }
 
 // misht krknvum e 1 varkian-y mek
 setInterval(interval, 1000);
 
-
-
-
 function kill() {
 	grassArr = [];
-	grassEaterArr = [];
+	grasseaterArr = [];
+	predatorArr = [];
+	JokerArr = [];
+	wolfArr = [];
 
 
 	for (var y = 0; y < matrix.length; y++) {
@@ -189,9 +189,8 @@ function kill() {
 			matrix[y][x] = 0;
 		}
 	}
-	io.sockets.emit("send matrix", matrix);
+	io.sockets.emit("matrix", matrix);
 }
-
 
 function addGrass() {
 	for (var i = 0; i < 7; i++) {
@@ -203,8 +202,9 @@ function addGrass() {
 			grassArr.push(gr)
 		}
 	}
-	io.sockets.emit("send matrix", matrix);
+	io.sockets.emit("matrix", matrix);
 }
+
 function addGrassEater() {
 	for (var i = 0; i < 7; i++) {
 		var x = Math.floor(Math.random() * matrix[0].length)
@@ -213,11 +213,10 @@ function addGrassEater() {
 			matrix[y][x] = 2
 			grasseaterArr.push(new GrassEater(x, y, 2))
 		}
-
 	}
-	io.sockets.emit("send matrix", matrix);
-
+	io.sockets.emit("matrix", matrix);
 }
+
 function addPredator() {
 	for (var i = 0; i < 7; i++) {
 		var x = Math.floor(Math.random() * matrix[0].length)
@@ -226,10 +225,8 @@ function addPredator() {
 			matrix[y][x] = 3
 			predatorArr.push(new Predator(x, y, 3))
 		}
-
 	}
-	io.sockets.emit("send matrix", matrix);
-
+	io.sockets.emit("matrix", matrix);
 }
 
 function weather() {
@@ -249,22 +246,13 @@ function weather() {
 }
 setInterval(weather, 5000);
 
-
-
-
-
-
-
-
 io.on('connection', function (socket) {
-	createObject();
+
 	socket.on("kill", kill);
 	socket.on("add grass", addGrass);
 	socket.on("add grassEater", addGrassEater);
 	socket.on("add predator", addPredator);
-
 });
-
 
 var statistics = {};
 

@@ -29,9 +29,9 @@ module.exports = class Predator extends LivingCreature{
 
 	}
 	eat() {
-		var emptyCells1 = this.chooseCell(1);
+		
 		var emptyCells2 = this.chooseCell(2);
-		var emptyCells = emptyCells1.concat(emptyCells2);
+		var emptyCells =(emptyCells2);
 
 		let uteliq = Random(emptyCells);
 
