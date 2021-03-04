@@ -16,21 +16,17 @@ Random = function (arr) {
 	return arr[Math.floor(Math.random() * arr.length)];
 }
 
-
 // talis e patahakan tiv min-ic minchev max
 function rand(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 // kanchum e modulnery
-
 var Grass = require("./class/Grass.js");
 var GrassEater = require("./class/GrassEater");
 var Predator = require("./class/Predator");
 var Joker = require("./class/Joker");
 var Wolf = require("./class/Wolf");
-
-
 
 var weath = "winter";
 // kerparneri qanaknery
@@ -229,6 +225,30 @@ function addPredator() {
 	io.sockets.emit("matrix", matrix);
 }
 
+function addJoker() {
+	for (var i = 0; i < 7; i++) {
+		var x = Math.floor(Math.random() * matrix[0].length)
+		var y = Math.floor(Math.random() * matrix.length)
+		if (matrix[y][x] == 0) {
+			matrix[y][x] = 4
+			JokerArr.push(new Joker(x, y, 4))
+		}
+	}
+	io.sockets.emit("matrix", matrix);
+}
+
+function addWolf() {
+	for (var i = 0; i < 7; i++) {
+		var x = Math.floor(Math.random() * matrix[0].length)
+		var y = Math.floor(Math.random() * matrix.length)
+		if (matrix[y][x] == 0) {
+			matrix[y][x] = 5
+			wolfArr.push(new Wolf(x, y, 5))
+		}
+	}
+	io.sockets.emit("matrix", matrix);
+}
+
 function weather() {
 	if (weath == "winter") {
 		weath = "spring"
@@ -252,6 +272,8 @@ io.on('connection', function (socket) {
 	socket.on("add grass", addGrass);
 	socket.on("add grassEater", addGrassEater);
 	socket.on("add predator", addPredator);
+	socket.on("add Joker", addJoker);
+	socket.on("add wolf", addWolf);
 });
 
 var statistics = {};

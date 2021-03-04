@@ -8,7 +8,6 @@ function setup() {
   background('#acacac');
 }
 
-
 socket.on("weather", function (data) {
   weath = data;
   console.log();
@@ -77,5 +76,13 @@ function addGrassEater() {
 
 function addPredator() {
   socket.emit("add predator")
+}
+
+function addJoker() {
+  socket.emit("add Joker")
+}
+
+function addWolf() {
+  socket.emit("add wolf")
 }
 
